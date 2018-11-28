@@ -28,6 +28,7 @@ app.get('/baokuan', function (req, res, next) {
 
   request(options, function(error, response, body) {
     if (!error && response.statusCode == 200) {
+      res.setHeader('Content-Type', 'application/json');
       res.send(body)
     }
   })
