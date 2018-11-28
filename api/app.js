@@ -1,5 +1,6 @@
 const express = require('express')
 const request = require('request')
+const path = require('path')
 const app = express()
 
 // Global consts
@@ -32,6 +33,16 @@ app.get('/baokuan', function (req, res, next) {
       res.send(body)
     }
   })
+});
+
+app.get('/config/index', function (req, res, next) {
+  res.header("Content-Type",'application/json');
+  res.sendFile(path.join(__dirname, '/static/index.json'));
+});
+
+app.get('/config/goods', function (req, res, next) {
+  res.header("Content-Type",'application/json');
+  res.sendFile(path.join(__dirname, '/static/goods.json'));
 });
 
 
