@@ -23,7 +23,7 @@ t:timestamp
 ***/
 
 // Get daily photos api
-app.get('/api/baokuan', function (req, res, next) {
+app.get('/baokuan', function (req, res, next) {
   var options = {url: URL_QINGTAOKE+'/baokuan?v=1.0&app_key='+KEY_QINGTAOKE}
 
   request(options, function(error, response, body) {
