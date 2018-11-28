@@ -6,6 +6,8 @@ const app = express()
 // Global consts
 const KEY_QINGTAOKE = '4h1EZTru'
 const URL_QINGTAOKE = 'http://openapi.qingtaoke.com'
+const URL_TAOBAO_DETAIL = 'https://h5api.m.taobao.com/h5/mtop.taobao.detail.getdetail/6.0/?data=%7B%22itemNumId%22%3A%22'
+const URL_TAOBAO_DESC = 'http://h5api.m.taobao.com/h5/mtop.taobao.detail.getdesc/6.0/?data={%22id%22:%22'
 
 /***
 TEXT: 【三只松鼠_氧气吐司面包800g/整箱】夹心吐司口袋面包早餐多口味
@@ -26,6 +28,28 @@ t:timestamp
 // Get daily photos api
 app.get('/baokuan', function (req, res, next) {
   var options = {url: URL_QINGTAOKE+'/baokuan?v=1.0&app_key='+KEY_QINGTAOKE}
+
+  request(options, function(error, response, body) {
+    if (!error && response.statusCode == 200) {
+      res.setHeader('Content-Type', 'application/json');
+      res.send(body)
+    }
+  })
+});
+
+app.get('/taobao/detail', function (req, res, next) {
+  var options = {url: URL_TAOBAO_DETAIL+req.query['goods_id']+'%22%7D'}
+
+  request(options, function(error, response, body) {
+    if (!error && response.statusCode == 200) {
+      res.setHeader('Content-Type', 'application/json');
+      res.send(body)
+    }
+  })
+});
+
+app.get('/taobao/desc', function (req, res, next) {
+  var options = {url: URL_TAOBAO_DESC+req.query['goods_id']+'%22}'}
 
   request(options, function(error, response, body) {
     if (!error && response.statusCode == 200) {
