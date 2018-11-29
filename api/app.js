@@ -2,7 +2,6 @@ const express = require('express')
 const request = require('request')
 const path = require('path')
 const app = express()
-var alimama = require('./alimama')
 
 // Global consts
 const KEY_QINGTAOKE = '4h1EZTru'
