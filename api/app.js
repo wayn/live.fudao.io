@@ -69,9 +69,8 @@ app.get('/taobao/coupon', function (req, res, next) {
   //&t=1489238018764&auctionid=570867197044
 
   let timestamp = + new Date()
-  let cookies = 'cna=0wGwE7YsujgCAXAUdsLn3l6L; t=e20c642f654e26ffd2d577e1097b9f3e; account-path-guide-s1=true; 33712550_yxjh-filter-1=true; cookie2=1766941b4cc77a646e24fb1fa937e93d; v=0; _tb_token_=e115f3ebe4119; alimamapwag=TW96aWxsYS81LjAgKE1hY2ludG9zaDsgSW50ZWwgTWFjIE9TIFggMTBfMTRfMSkgQXBwbGVXZWJLaXQvNTM3LjM2IChLSFRNTCwgbGlrZSBHZWNrbykgQ2hyb21lLzcwLjAuMzUzOC4xMTAgU2FmYXJpLzUzNy4zNg%3D%3D; cookie32=11a65b896c617d67fe463fd280ee6e58; alimamapw=RQMdC2cOCBM9BFNWBFdTUQcAUFdTXAoBB1ZXB1EBAwMDUQFWBlMAAFo%3D; cookie31=MzM3MTI1NTAsd2F5bl9saXUsd2F5bl9saXVAeWVhaC5uZXQsVEI%3D; login=U%2BGCWk%2F75gdr5Q%3D%3D; JSESSIONID=42AB7D04AA89C8EB2FEE3800BDB110D4; rurl=aHR0cHM6Ly9wdWIuYWxpbWFtYS5jb20v; isg=BG5ut3vhuaaPs81bRCBIdBABv8Lwx_W54kQSnZg1bXG9ewrVAPyaeDUyN6cyoyqB; apush4244a320499bbf881946adce89940f11=%7B%22ts%22%3A1543504139111%2C%22parentId%22%3A1543502386753%7D'
+  let cookies = 'cna=0wGwE7YsujgCAXAUdsLn3l6L; t=e20c642f654e26ffd2d577e1097b9f3e; account-path-guide-s1=true; 33712550_yxjh-filter-1=true; cookie2=1766941b4cc77a646e24fb1fa937e93d; v=0; _tb_token_=e115f3ebe4119; alimamapwag=TW96aWxsYS81LjAgKE1hY2ludG9zaDsgSW50ZWwgTWFjIE9TIFggMTBfMTRfMSkgQXBwbGVXZWJLaXQvNTM3LjM2IChLSFRNTCwgbGlrZSBHZWNrbykgQ2hyb21lLzcwLjAuMzUzOC4xMTAgU2FmYXJpLzUzNy4zNg%3D%3D; cookie32=11a65b896c617d67fe463fd280ee6e58; alimamapw=RQMdC2cOCBM9BFNWBFdTUQcAUFdTXAoBB1ZXB1EBAwMDUQFWBlMAAFo%3D; cookie31=MzM3MTI1NTAsd2F5bl9saXUsd2F5bl9saXVAeWVhaC5uZXQsVEI%3D; login=U%2BGCWk%2F75gdr5Q%3D%3D; JSESSIONID=FF29B578FAE8EC7353862B2293FDB831; isg=BJycK41kLK90x98VqgoaYlZbbbyOvYfvdUZiC3adqAdqwTxLniUQzxJzJW-c0niX; apush4244a320499bbf881946adce89940f11=%7B%22ts%22%3A1543505533307%2C%22parentId%22%3A1543502386753%7D'
   var options = {url: URL_TAOBAO_COUPON + req.query['goods_id'] + '&t=' + timestamp, headers:{Cookie:cookies}}
-  console.log(options)
   request(options, function(error, response, body) {
     if (!error && response.statusCode == 200) {
       res.setHeader('Content-Type', 'application/json');
