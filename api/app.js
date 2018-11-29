@@ -49,11 +49,17 @@ app.get('/taobao/detail', function (req, res, next) {
 });
 
 app.get('/taobao/desc', function (req, res, next) {
-  var options = {url: URL_TAOBAO_DESC+req.query['desc_url']}
+  var options = {url: URL_TAOBAO_DESC+req.query['goods_id']}
   request(options, function(error, response, body) {
+    var imageArray = []
     if (!error && response.statusCode == 200) {
+      imageArray = JSON.parse(body).data.children.filter(obj => {
+        return (obj.ID.includes('detail_pic') && typeof obj.children === "undefined")
+      }).map(obj => {
+        return obj.params.picUrl
+      })
       res.setHeader('Content-Type', 'application/json');
-      res.send(body)
+      res.send(JSON.stringify(imageArray))
     }
   })
 });
