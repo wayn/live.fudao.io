@@ -1,6 +1,7 @@
 const express = require('express')
 const request = require('request')
 const path = require('path')
+const fs = require('fs')
 const app = express()
 
 // Global consts
@@ -66,10 +67,9 @@ app.get('/taobao/desc', function (req, res, next) {
 });
 
 app.get('/taobao/coupon', function (req, res, next) {
-  //&t=1489238018764&auctionid=570867197044
-
   let timestamp = + new Date()
-  let cookies = 'cna=0wGwE7YsujgCAXAUdsLn3l6L; t=e20c642f654e26ffd2d577e1097b9f3e; account-path-guide-s1=true; 33712550_yxjh-filter-1=true; cookie2=10ffd490986129da86b4534a0414e2c2; v=0; _tb_token_=e1ed67e6137f7; alimamapwag=TW96aWxsYS81LjAgKE1hY2ludG9zaDsgSW50ZWwgTWFjIE9TIFggMTBfMTRfMSkgQXBwbGVXZWJLaXQvNTM3LjM2IChLSFRNTCwgbGlrZSBHZWNrbykgQ2hyb21lLzcwLjAuMzUzOC4xMTAgU2FmYXJpLzUzNy4zNg%3D%3D; cookie32=11a65b896c617d67fe463fd280ee6e58; alimamapw=RQMdC2cOCBM9BFNWBFdTUQcAUFdTXAoBB1ZXB1EBAwMDUQFWBlMAAFo%3D; cookie31=MzM3MTI1NTAsd2F5bl9saXUsd2F5bl9saXVAeWVhaC5uZXQsVEI%3D; login=VFC%2FuZ9ayeYq2g%3D%3D; isg=BFFRjMVN6WBznwISLxH_3etgYFsrFsc6yUWdlDPmTZg32nEsew7VAP-7ee6ZUl1o; JSESSIONID=7252BFDF3C6F5D9B99C366B417B5C98F'
+  let filePath = path.join(__dirname, 'cookie')
+  var cookies = fs.readFileSync(filePath).toString()
   var options = {url: URL_TAOBAO_COUPON + req.query['goods_id'] + '&t=' + timestamp, headers:{Cookie:cookies}}
   request(options, function(error, response, body) {
     if (!error && response.statusCode == 200) {
@@ -77,7 +77,6 @@ app.get('/taobao/coupon', function (req, res, next) {
       res.send(body)
     }
   })
-
 });
 
 app.get('/config/index', function (req, res, next) {
