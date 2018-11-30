@@ -39,6 +39,18 @@ app.get('/baokuan', function (req, res, next) {
   })
 });
 
+app.get('/taobao/list', function (req, res, next) {
+  var qs = req.query
+  var options = {url: URL_QINGTAOKE+'/qingsoulist?v=1.0&app_key='+KEY_QINGTAOKE, qs: qs}
+
+  request(options, function(error, response, body) {
+    if (!error && response.statusCode == 200) {
+      res.setHeader('Content-Type', 'application/json');
+      res.send(body)
+    }
+  })
+});
+
 app.get('/taobao/detail', function (req, res, next) {
   var options = {url: URL_TAOBAO_DETAIL+req.query['goods_id']+'%22%7D'}
 
@@ -72,6 +84,7 @@ app.get('/taobao/coupon', function (req, res, next) {
   var cookies = fs.readFileSync(filePath).toString()
   var options = {url: URL_TAOBAO_COUPON + req.query['goods_id'] + '&t=' + timestamp, headers:{Cookie:cookies}}
   request(options, function(error, response, body) {
+    console.log(response.headers['set-cookie'])
     if (!error && response.statusCode == 200) {
       res.setHeader('Content-Type', 'application/json');
       res.send(body)
