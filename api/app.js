@@ -27,7 +27,7 @@ scenes:1
 t:timestamp
 ***/
 
-// Get daily photos api
+// 爆款
 app.get('/baokuan', function (req, res, next) {
   var options = {url: URL_QINGTAOKE+'/baokuan?v=1.0&app_key='+KEY_QINGTAOKE}
 
@@ -39,9 +39,35 @@ app.get('/baokuan', function (req, res, next) {
   })
 });
 
+// 列表，分类
 app.get('/taobao/list', function (req, res, next) {
   var qs = req.query
   var options = {url: URL_QINGTAOKE+'/qingsoulist?v=1.0&app_key='+KEY_QINGTAOKE, qs: qs}
+
+  request(options, function(error, response, body) {
+    if (!error && response.statusCode == 200) {
+      res.setHeader('Content-Type', 'application/json');
+      res.send(body)
+    }
+  })
+});
+
+// 搜索
+app.get('/taobao/search', function (req, res, next) {
+  var qs = req.query
+  var options = {url: URL_QINGTAOKE+'/search?s_type=1&v=1.0&app_key='+KEY_QINGTAOKE, qs: qs}
+
+  request(options, function(error, response, body) {
+    if (!error && response.statusCode == 200) {
+      res.setHeader('Content-Type', 'application/json');
+      res.send(body)
+    }
+  })
+});
+
+// 热搜词
+app.get('/taobao/hot', function (req, res, next) {
+  var options = {url: URL_QINGTAOKE+'/hot?v=1.0&app_key='+KEY_QINGTAOKE}
 
   request(options, function(error, response, body) {
     if (!error && response.statusCode == 200) {
