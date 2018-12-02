@@ -2,6 +2,9 @@ const express = require('express')
 const request = require('request')
 const path = require('path')
 const fs = require('fs')
+var bodyParser = require('body-parser');
+var multer = require('multer'); // v1.0.5
+var upload = multer();
 const app = express()
 
 // Global consts
@@ -118,6 +121,18 @@ app.get('/taobao/coupon', function (req, res, next) {
   })
 });
 
+app.post('/taobao/cookies',upload.array(), function (req, res, next) {
+  console.log(req.body)
+  let cookies = req.body['cookies']
+  fs.writeFile('cookie', cookies, (err) => {
+    // throws an error, you could also catch it here
+    if (err) throw err;
+
+    // success case, the file was saved
+    res.send('Lyric saved!')
+  });
+});
+
 app.get('/config/index', function (req, res, next) {
   res.header("Content-Type",'application/json');
   res.sendFile(path.join(__dirname, '/static/index.json'));
@@ -140,6 +155,8 @@ app.use(function(err, req, res, next){
   res.status(err.status || 500);
   res.send({ error: err.message });
 });
+
+app.use(bodyParser.json());
 
 // our custom JSON 404 middleware. Since it's placed last
 // it will be the last middleware called, if all others
