@@ -103,7 +103,7 @@ app.get('/taobao/search', function (req, res, next) {
   request(options, function(error, response, body) {
     if (!error && response.statusCode == 200) {
       res.setHeader('Content-Type', 'application/json')
-      var body = JSON.parse(body).data.pageList.map(obj => {
+      var list = JSON.parse(body).data.pageList.map(obj => {
         var goods = {}
         goods.goods_id = obj.auctionId
         goods.goods_pic = obj.pictUrl
@@ -114,7 +114,7 @@ app.get('/taobao/search', function (req, res, next) {
         return goods
       })
 
-      res.send({'er_code': 10000, 'er_msg': '', 'data': body})
+      res.send({'er_code': 10000, 'er_msg': '', 'data': {'total':JSON.parse(body).data.paginator.items, 'list': list}})
     }
   })
 });
