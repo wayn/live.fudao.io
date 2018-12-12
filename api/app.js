@@ -70,6 +70,7 @@ app.get('/taobao/search/o', function (req, res, next) {
 });
 
 app.get('/taobao/search', function (req, res, next) {
+  var cookies = fs.readFileSync(filePath).toString()
   var qs = req.query
 
   var sort = req.query.sort
@@ -106,7 +107,7 @@ app.get('/taobao/search', function (req, res, next) {
   qs.channel = 'qqhd'
   qs.toPage = parseInt(qs.toPage)
   delete qs.sort
-  var options = {url: URL_TAOBAO_SEARCH, qs: qs}
+  var options = {url: URL_TAOBAO_SEARCH, qs: qs, headers:{Cookie:cookies}}
   console.log(qs);
   request(options, function(error, response, body) {
     if (!error && response.statusCode == 200) {
