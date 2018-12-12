@@ -111,7 +111,7 @@ app.get('/taobao/search', function (req, res, next) {
   request(options, function(error, response, body) {
     if (!error && response.statusCode == 200) {
       res.setHeader('Content-Type', 'application/json')
-      if ((typeof JSON.parse(body).data.pageList === "undefined") || JSON.parse(body).data.pageList == null || JSON.parse(body).data.pageList.length == 0) {
+      if (!JSON.parse(body).data.pageList || (typeof JSON.parse(body).data.pageList === "undefined") || JSON.parse(body).data.pageList == null || JSON.parse(body).data.pageList.length == 0) {
         res.send({'er_code': 10000, 'er_msg': '', 'data': {'total':0, 'list': []}})
         return
       }
