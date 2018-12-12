@@ -13,6 +13,7 @@ const URL_QINGTAOKE = 'http://openapi.qingtaoke.com'
 const URL_TAOBAO_DETAIL = 'https://h5api.m.taobao.com/h5/mtop.taobao.detail.getdetail/6.0/?data=%7B%22itemNumId%22%3A%22'
 const URL_TAOBAO_DESC = 'http://hws.m.taobao.com/d/modulet/v5/WItemMouldDesc.do?'
 const URL_TAOBAO_COUPON = 'https://pub.alimama.com/common/code/getAuctionCode.json?adzoneid=63092300043&siteid=230450350&scenes=1&auctionid='
+const URL_TAOBAO_SEARCH = 'http://pub.alimama.com/items/search.json?'
 
 /***
 TEXT: 【三只松鼠_氧气吐司面包800g/整箱】夹心吐司口袋面包早餐多口味
@@ -56,7 +57,7 @@ app.get('/taobao/list', function (req, res, next) {
 });
 
 // 搜索
-app.get('/taobao/search', function (req, res, next) {
+app.get('/taobao/search/o', function (req, res, next) {
   var qs = req.query
   var options = {url: URL_QINGTAOKE+'/search?s_type=1&v=1.0&app_key='+KEY_QINGTAOKE, qs: qs}
 
@@ -64,6 +65,28 @@ app.get('/taobao/search', function (req, res, next) {
     if (!error && response.statusCode == 200) {
       res.setHeader('Content-Type', 'application/json');
       res.send(body)
+    }
+  })
+});
+
+app.get('/taobao/search', function (req, res, next) {
+  var qs = req.query
+  var options = {url: URL_TAOBAO_SEARCH, qs: qs}
+  request(options, function(error, response, body) {
+    if (!error && response.statusCode == 200) {
+      res.setHeader('Content-Type', 'application/json')
+      var body = JSON.parse(body).data.pageList.map(obj => {
+        var goods = {}
+        goods.goods_id = obj.auctionId
+        goods.goods_pic = obj.pictUrl
+        goods.goods_title = obj.title.replace(/<\/?[^>]+(>|$)/g, "")
+        goods.goods_short_title = goods.goods_title
+        goods.goods_price = obj.zkPrice+obj.couponAmount
+        goods.coupon_price = obj.couponAmount
+        return goods
+      })
+
+      res.send({'er_code': 10000, 'er_msg': '', 'data': body})
     }
   })
 });
