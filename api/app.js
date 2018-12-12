@@ -104,13 +104,14 @@ app.get('/taobao/search', function (req, res, next) {
   qs.startPrice = 1
   qs.perPageSize = 300
   qs.channel = 'qqhd'
+  qs.toPage = parseInt(qs.toPage)
   delete qs.sort
   var options = {url: URL_TAOBAO_SEARCH, qs: qs}
-
+  console.log(qs);
   request(options, function(error, response, body) {
     if (!error && response.statusCode == 200) {
       res.setHeader('Content-Type', 'application/json')
-      if (JSON.parse(body).data.pageList == null || JSON.parse(body).data.pageList.length == 0) {
+      if ((typeof JSON.parse(body).data.pageList === "undefined") || JSON.parse(body).data.pageList == null || JSON.parse(body).data.pageList.length == 0) {
         res.send({'er_code': 10000, 'er_msg': '', 'data': {'total':0, 'list': []}})
         return
       }
