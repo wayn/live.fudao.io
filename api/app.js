@@ -71,6 +71,34 @@ app.get('/taobao/search/o', function (req, res, next) {
 
 app.get('/taobao/search', function (req, res, next) {
   var qs = req.query
+  console.log(qs);
+  var sort = req.query.sort
+  var queryType = 0
+  var sortType = 0
+  if (sort == 1) {
+    queryType = 2
+  }
+  else if (sort == 8) {
+    queryType = 0
+  }
+  else if (sort == 2) {
+    sortType = 1
+  }
+  else if (sort == 3) {
+    sortType = 5
+  }
+  else if (sort == 9) {
+    sortType = 7
+  }
+  else if (sort == 4) {
+    sortType = 4
+  }
+  else if (sort == 7) {
+    sortType = 3
+  }
+  qs.queryType = queryType
+  qs.sortType = sortType
+  delete qs.sort
   var options = {url: URL_TAOBAO_SEARCH, qs: qs}
   request(options, function(error, response, body) {
     if (!error && response.statusCode == 200) {
