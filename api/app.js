@@ -70,6 +70,7 @@ app.get('/taobao/search/o', function (req, res, next) {
 });
 
 app.get('/taobao/search', function (req, res, next) {
+  let filePath = path.join(__dirname, 'cookie')
   var cookies = fs.readFileSync(filePath).toString()
   var qs = req.query
 
