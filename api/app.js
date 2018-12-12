@@ -127,7 +127,7 @@ app.get('/taobao/search', function (req, res, next) {
         goods.goods_sales = obj.biz30day
         return goods
       })
-      res.send({'er_code': 10000, 'er_msg': '', 'data': {'total':list.length, 'list': list}})
+      res.send({'er_code': 10000, 'er_msg': '', 'data': {'total':JSON.parse(body).data.paginator.items, 'list': list}})
     }
   })
 });
