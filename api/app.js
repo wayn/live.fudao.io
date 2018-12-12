@@ -104,10 +104,14 @@ app.get('/taobao/search', function (req, res, next) {
   qs.startPrice = 1
   delete qs.sort
   var options = {url: URL_TAOBAO_SEARCH, qs: qs}
-  console.log(qs);
+
   request(options, function(error, response, body) {
     if (!error && response.statusCode == 200) {
       res.setHeader('Content-Type', 'application/json')
+      if (JSON.parse(body).data.pageList == null || JSON.parse(body).data.pageList.length == 0) {
+        res.send({'er_code': 10000, 'er_msg': '', 'data': {'total':0, 'list': []}})
+        return
+      }
       var list = JSON.parse(body).data.pageList.filter(obj => {
         return (obj.couponEffectiveEndTime.length != 0 && obj.couponLeftCount != 0)
       }).map(obj => {
@@ -123,8 +127,7 @@ app.get('/taobao/search', function (req, res, next) {
         goods.goods_sales = obj.biz30day
         return goods
       })
-
-      res.send({'er_code': 10000, 'er_msg': '', 'data': {'total':JSON.parse(body).data.paginator.items, 'list': list}})
+      res.send({'er_code': 10000, 'er_msg': '', 'data': {'total':list.length, 'list': list}})
     }
   })
 });
