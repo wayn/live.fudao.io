@@ -13,7 +13,7 @@ const URL_QINGTAOKE = 'http://openapi.qingtaoke.com'
 const URL_TAOBAO_DETAIL = 'https://h5api.m.taobao.com/h5/mtop.taobao.detail.getdetail/6.0/?data=%7B%22itemNumId%22%3A%22'
 const URL_TAOBAO_DESC = 'http://hws.m.taobao.com/d/modulet/v5/WItemMouldDesc.do?'
 const URL_TAOBAO_COUPON = 'https://pub.alimama.com/common/code/getAuctionCode.json?adzoneid=63092300043&siteid=230450350&scenes=1&auctionid='
-const URL_TAOBAO_SEARCH = 'http://pub.alimama.com/items/channel/qqhd.json?'
+const URL_TAOBAO_SEARCH = 'http://pub.alimama.com/items/search.json?'
 
 /***
 TEXT: 【三只松鼠_氧气吐司面包800g/整箱】夹心吐司口袋面包早餐多口味
