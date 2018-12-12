@@ -71,9 +71,9 @@ app.get('/taobao/search/o', function (req, res, next) {
 
 app.get('/taobao/search', function (req, res, next) {
   var qs = req.query
-  console.log(qs);
+
   var sort = req.query.sort
-  var queryType = 0
+  var queryType = 2
   var sortType = 0
   if (sort == 1) {
     queryType = 2
@@ -98,19 +98,29 @@ app.get('/taobao/search', function (req, res, next) {
   }
   qs.queryType = queryType
   qs.sortType = sortType
+  qs.dpyhq = 1
+  qs.dxjh = 1
+  qs.freeShipment = 1
+  qs.startPrice = 1
   delete qs.sort
   var options = {url: URL_TAOBAO_SEARCH, qs: qs}
+  console.log(qs);
   request(options, function(error, response, body) {
     if (!error && response.statusCode == 200) {
       res.setHeader('Content-Type', 'application/json')
-      var list = JSON.parse(body).data.pageList.map(obj => {
+      var list = JSON.parse(body).data.pageList.filter(obj => {
+        return (obj.couponEffectiveEndTime.length != 0 && obj.couponLeftCount != 0)
+      }).map(obj => {
         var goods = {}
         goods.goods_id = obj.auctionId
         goods.goods_pic = obj.pictUrl
         goods.goods_title = obj.title.replace(/<\/?[^>]+(>|$)/g, "")
         goods.goods_short_title = goods.goods_title
-        goods.goods_price = obj.zkPrice+obj.couponAmount
+        goods.goods_price = obj.zkPrice
         goods.coupon_price = obj.couponAmount
+        goods.coupon_start_time = obj.couponEffectiveStartTime
+        goods.coupon_end_time = obj.couponEffectiveEndTime
+        goods.goods_sales = obj.biz30day
         return goods
       })
 
