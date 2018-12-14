@@ -14,6 +14,7 @@ const URL_TAOBAO_DETAIL = 'https://h5api.m.taobao.com/h5/mtop.taobao.detail.getd
 const URL_TAOBAO_DESC = 'http://hws.m.taobao.com/d/modulet/v5/WItemMouldDesc.do?'
 const URL_TAOBAO_COUPON = 'https://pub.alimama.com/common/code/getAuctionCode.json?adzoneid=63092300043&siteid=230450350&scenes=1&auctionid='
 const URL_TAOBAO_SEARCH = 'https://pub.alimama.com/items/search.json?'
+const URL_HAODANKU_DETAIL = 'http://v2.api.haodanku.com/item_detail/apikey/livefudaoio/itemid/'
 
 /***
 TEXT: 【三只松鼠_氧气吐司面包800g/整箱】夹心吐司口袋面包早餐多口味
@@ -54,6 +55,7 @@ app.get('/taobao/list', function (req, res, next) {
       res.send(body)
     }
   })
+
 });
 
 // 搜索
@@ -150,13 +152,33 @@ app.get('/taobao/hot', function (req, res, next) {
 });
 
 app.get('/taobao/detail', function (req, res, next) {
-  var options = {url: URL_TAOBAO_DETAIL+req.query['goods_id']+'%22%7D'}
+  var p1 = new Promise(function(resolve, reject) {
+    request({url: URL_TAOBAO_DETAIL+req.query['goods_id']+'%22%7D'}, function(error, response, body) {
+      if (!error && response.statusCode == 200) {
+        resolve(body)
+      }
+    })
+  });
 
-  request(options, function(error, response, body) {
-    if (!error && response.statusCode == 200) {
-      res.setHeader('Content-Type', 'application/json');
-      res.send(body)
-    }
+  var p2 = new Promise(function(resolve, reject) {
+    request({url: URL_HAODANKU_DETAIL+req.query['goods_id']}, function(error, response, body) {
+      if (!error && response.statusCode == 200) {
+        p2 = resolve(body)
+      }
+    })
+  });
+
+  Promise.all([p1, p2]).then(values => {
+    res.setHeader('Content-Type', 'application/json');
+    var body1 = JSON.parse(values[0])
+    var body2 = JSON.parse(values[1])
+    body1.data.item.goods_price = body2.data.itemprice
+    body1.data.item.coupon_price = body2.data.couponmoney
+    body1.data.item.coupon_start_time = new Date(body2.data.couponstarttime*1000).toISOString()
+    body1.data.item.coupon_end_time = new Date(body2.data.couponendtime*1000).toISOString()
+    body1.data.item.goods_introduce = body2.data.guide_article
+
+    res.send(JSON.stringify(body1))
   })
 });
 
