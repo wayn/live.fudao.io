@@ -177,6 +177,7 @@ app.get('/taobao/detail', function (req, res, next) {
     body1.data.item.coupon_start_time = new Date(body2.data.couponstarttime*1000).toISOString()
     body1.data.item.coupon_end_time = new Date(body2.data.couponendtime*1000).toISOString()
     body1.data.item.goods_introduce = body2.data.guide_article
+    body1.data.item.goods_sales = body2.data.itemsale
 
     res.send(JSON.stringify(body1))
   })
