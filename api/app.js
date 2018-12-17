@@ -195,8 +195,11 @@ app.get('/taobao/detail', function (req, res, next) {
     if (req.query['reload'] == '1') {
       request({url: URL_HAODANKU_DETAIL+req.query['goods_id']}, function(error, response, body) {
         console.log(body);
-        if (!error && response.statusCode == 200) {
+        if (!error && response.statusCode == 200 && JSON.parse(body).code != 0) {
           p2 = resolve(body)
+        }
+        else {
+          resolve('[]')
         }
       })
     }
