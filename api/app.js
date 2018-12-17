@@ -15,6 +15,7 @@ const URL_TAOBAO_DESC = 'http://hws.m.taobao.com/d/modulet/v5/WItemMouldDesc.do?
 const URL_TAOBAO_COUPON = 'https://pub.alimama.com/common/code/getAuctionCode.json?adzoneid=63092300043&siteid=230450350&scenes=1&auctionid='
 const URL_TAOBAO_SEARCH = 'https://pub.alimama.com/items/search.json?'
 const URL_HAODANKU_DETAIL = 'http://v2.api.haodanku.com/item_detail/apikey/livefudaoio/itemid/'
+const URL_HAODANKU_SEARCH = 'http://v2.api.haodanku.com/supersearch/apikey/livefudaoio/keyword/'
 
 /***
 TEXT: 【三只松鼠_氧气吐司面包800g/整箱】夹心吐司口袋面包早餐多口味
@@ -139,6 +140,35 @@ app.get('/taobao/search', function (req, res, next) {
   })
 });
 
+// app.get('/taobao/search', function (req, res, next) {
+//   var qs = req.query
+//   request(options, function(error, response, body) {
+//     if (!error && response.statusCode == 200) {
+//       res.setHeader('Content-Type', 'application/json')
+//       if (!JSON.parse(body).data || (typeof JSON.parse(body).data === "undefined") || JSON.parse(body).data.pageList == null || JSON.parse(body).data.pageList.length == 0) {
+//         res.send({'er_code': 10000, 'er_msg': '', 'data': {'total':0, 'list': []}})
+//         return
+//       }
+//       var list = JSON.parse(body).data.pageList.filter(obj => {
+//         return (obj.couponEffectiveEndTime.length != 0 && obj.couponLeftCount != 0)
+//       }).map(obj => {
+//         var goods = {}
+//         goods.goods_id = obj.auctionId
+//         goods.goods_pic = obj.pictUrl
+//         goods.goods_title = obj.title.replace(/<\/?[^>]+(>|$)/g, "")
+//         goods.goods_short_title = goods.goods_title
+//         goods.goods_price = obj.zkPrice
+//         goods.coupon_price = obj.couponAmount
+//         goods.coupon_start_time = obj.couponEffectiveStartTime
+//         goods.coupon_end_time = obj.couponEffectiveEndTime
+//         goods.goods_sales = obj.biz30day
+//         return goods
+//       })
+//       res.send({'er_code': 10000, 'er_msg': '', 'data': {'total':list.length, 'list': list}})
+//     }
+//   })
+// });
+
 // 热搜词
 app.get('/taobao/hot', function (req, res, next) {
   var options = {url: URL_QINGTAOKE+'/hot?v=1.0&app_key='+KEY_QINGTAOKE}
@@ -161,23 +191,34 @@ app.get('/taobao/detail', function (req, res, next) {
   });
 
   var p2 = new Promise(function(resolve, reject) {
-    request({url: URL_HAODANKU_DETAIL+req.query['goods_id']}, function(error, response, body) {
-      if (!error && response.statusCode == 200) {
-        p2 = resolve(body)
-      }
-    })
+
+    if (req.query['reload'] == '1') {
+      request({url: URL_HAODANKU_DETAIL+req.query['goods_id']}, function(error, response, body) {
+        console.log(body);
+        if (!error && response.statusCode == 200) {
+          p2 = resolve(body)
+        }
+      })
+    }
+    else {
+      resolve('[]')
+    }
   });
 
   Promise.all([p1, p2]).then(values => {
     res.setHeader('Content-Type', 'application/json');
     var body1 = JSON.parse(values[0])
+    console.log('=================');
+    console.log(values[1]);
     var body2 = JSON.parse(values[1])
-    body1.data.item.goods_price = body2.data.itemprice
-    body1.data.item.coupon_price = body2.data.couponmoney
-    body1.data.item.coupon_start_time = new Date(body2.data.couponstarttime*1000).toISOString()
-    body1.data.item.coupon_end_time = new Date(body2.data.couponendtime*1000).toISOString()
-    body1.data.item.goods_introduce = body2.data.guide_article
-    body1.data.item.goods_sales = body2.data.itemsale
+    if (typeof body2.data != "undefined") {
+      body1.data.item.goods_price = body2.data.itemprice
+      body1.data.item.coupon_price = body2.data.couponmoney
+      body1.data.item.coupon_start_time = new Date(body2.data.couponstarttime*1000).toISOString()
+      body1.data.item.coupon_end_time = new Date(body2.data.couponendtime*1000).toISOString()
+      body1.data.item.goods_introduce = body2.data.guide_article
+      body1.data.item.goods_sales = body2.data.itemsale
+    }
 
     res.send(JSON.stringify(body1))
   })
