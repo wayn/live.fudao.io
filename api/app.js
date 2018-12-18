@@ -104,11 +104,9 @@ app.get('/taobao/search', function (req, res, next) {
   qs.queryType = queryType
   qs.sortType = sortType
   qs.dpyhq = 1
-  qs.dxjh = 1
   qs.freeShipment = 1
   qs.startPrice = 1
-  qs.perPageSize = 300
-  qs.channel = 'qqhd'
+  qs.perPageSize = 500
   qs.toPage = parseInt(qs.toPage)
   delete qs.sort
   var options = {url: URL_TAOBAO_SEARCH, qs: qs, headers:{Cookie:cookies}}
@@ -142,6 +140,7 @@ app.get('/taobao/search', function (req, res, next) {
 
 // app.get('/taobao/search', function (req, res, next) {
 //   var qs = req.query
+//   var options = {url: URL_HAODANKU_SEARCH, qs: qs}
 //   request(options, function(error, response, body) {
 //     if (!error && response.statusCode == 200) {
 //       res.setHeader('Content-Type', 'application/json')
@@ -149,9 +148,7 @@ app.get('/taobao/search', function (req, res, next) {
 //         res.send({'er_code': 10000, 'er_msg': '', 'data': {'total':0, 'list': []}})
 //         return
 //       }
-//       var list = JSON.parse(body).data.pageList.filter(obj => {
-//         return (obj.couponEffectiveEndTime.length != 0 && obj.couponLeftCount != 0)
-//       }).map(obj => {
+//       var list = JSON.parse(body).data.pageList.map(obj => {
 //         var goods = {}
 //         goods.goods_id = obj.auctionId
 //         goods.goods_pic = obj.pictUrl
