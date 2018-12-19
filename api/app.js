@@ -13,7 +13,7 @@ const URL_QINGTAOKE = 'http://openapi.qingtaoke.com'
 const URL_TAOBAO_DETAIL = 'https://h5api.m.taobao.com/h5/mtop.taobao.detail.getdetail/6.0/?data=%7B%22itemNumId%22%3A%22'
 const URL_TAOBAO_DESC = 'http://hws.m.taobao.com/d/modulet/v5/WItemMouldDesc.do?'
 const URL_TAOBAO_COUPON = 'https://pub.alimama.com/common/code/getAuctionCode.json?adzoneid=63092300043&siteid=230450350&scenes=1&auctionid='
-const URL_TAOBAO_SEARCH = 'https://pub.alimama.com/items/search.json?'
+const URL_TAOBAO_SEARCH = 'https://pub.alimama.com/items/search.json?perPageSize=200&dpyhq=1&freeShipment=1&shopTag=yxjh%2Cdpyhq'
 const URL_HAODANKU_DETAIL = 'http://v2.api.haodanku.com/item_detail/apikey/livefudaoio/itemid/'
 const URL_HAODANKU_SEARCH = 'http://v2.api.haodanku.com/supersearch/apikey/livefudaoio/keyword/'
 
@@ -103,15 +103,12 @@ app.get('/taobao/search', function (req, res, next) {
   }
   qs.queryType = queryType
   qs.sortType = sortType
-  qs.dpyhq = 1
-  qs.freeShipment = 1
-  qs.startPrice = 1
-  qs.perPageSize = 500
   qs.toPage = parseInt(qs.toPage)
   delete qs.sort
   var options = {url: URL_TAOBAO_SEARCH, qs: qs, headers:{Cookie:cookies}}
   console.log(qs);
   request(options, function(error, response, body) {
+      console.log(options);
     if (!error && response.statusCode == 200) {
       res.setHeader('Content-Type', 'application/json')
       if (!JSON.parse(body).data || (typeof JSON.parse(body).data === "undefined") || JSON.parse(body).data.pageList == null || JSON.parse(body).data.pageList.length == 0) {
