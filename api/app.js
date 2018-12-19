@@ -16,6 +16,7 @@ const URL_TAOBAO_COUPON = 'https://pub.alimama.com/common/code/getAuctionCode.js
 const URL_TAOBAO_SEARCH = 'https://pub.alimama.com/items/search.json?perPageSize=200&dpyhq=1&freeShipment=1&shopTag=yxjh%2Cdpyhq'
 const URL_HAODANKU_DETAIL = 'http://v2.api.haodanku.com/item_detail/apikey/livefudaoio/itemid/'
 const URL_HAODANKU_SEARCH = 'http://v2.api.haodanku.com/supersearch/apikey/livefudaoio/keyword/'
+const URL_HAODANKU_DESERVE = 'http://v2.api.haodanku.com/get_deserve_item/apikey/livefudaoio'
 
 /***
 TEXT: 【三只松鼠_氧气吐司面包800g/整箱】夹心吐司口袋面包早餐多口味
@@ -43,6 +44,29 @@ app.get('/baokuan', function (req, res, next) {
       res.send(body)
     }
   })
+});
+
+app.get('/taobao/deserve', function (req, res, next) {
+    request({url: URL_HAODANKU_DESERVE}, function(error, response, body) {
+        if (!error && response.statusCode == 200) {
+            res.setHeader('Content-Type', 'application/json')
+            var list = JSON.parse(body).item_info.map(obj => {
+                var goods = {}
+                goods.goods_id = obj.itemid
+                goods.goods_pic = obj.itempic
+                goods.goods_title = obj.itemtitle.replace(/<\/?[^>]+(>|$)/g, "")
+                goods.goods_short_title = obj.itemshorttitle
+                goods.goods_price = obj.itemprice
+                goods.coupon_price = obj.couponmoney
+                goods.goods_introduce = obj.guide_article
+                goods.coupon_start_time = new Date(obj.couponstarttime*1000).toISOString()
+                goods.coupon_end_time = new Date(obj.couponendtime*1000).toISOString()
+                goods.goods_sales = obj.itemsale
+                return goods
+            })
+            res.send({'er_code': 10000, 'er_msg': '', 'data': list})
+        }
+    })
 });
 
 // 列表，分类
