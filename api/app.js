@@ -159,34 +159,6 @@ app.get('/taobao/search', function (req, res, next) {
   })
 });
 
-// app.get('/taobao/search', function (req, res, next) {
-//   var qs = req.query
-//   var options = {url: URL_HAODANKU_SEARCH, qs: qs}
-//   request(options, function(error, response, body) {
-//     if (!error && response.statusCode == 200) {
-//       res.setHeader('Content-Type', 'application/json')
-//       if (!JSON.parse(body).data || (typeof JSON.parse(body).data === "undefined") || JSON.parse(body).data.pageList == null || JSON.parse(body).data.pageList.length == 0) {
-//         res.send({'er_code': 10000, 'er_msg': '', 'data': {'total':0, 'list': []}})
-//         return
-//       }
-//       var list = JSON.parse(body).data.pageList.map(obj => {
-//         var goods = {}
-//         goods.goods_id = obj.auctionId
-//         goods.goods_pic = obj.pictUrl
-//         goods.goods_title = obj.title.replace(/<\/?[^>]+(>|$)/g, "")
-//         goods.goods_short_title = goods.goods_title
-//         goods.goods_price = obj.zkPrice
-//         goods.coupon_price = obj.couponAmount
-//         goods.coupon_start_time = obj.couponEffectiveStartTime
-//         goods.coupon_end_time = obj.couponEffectiveEndTime
-//         goods.goods_sales = obj.biz30day
-//         return goods
-//       })
-//       res.send({'er_code': 10000, 'er_msg': '', 'data': {'total':list.length, 'list': list}})
-//     }
-//   })
-// });
-
 // 热搜词
 app.get('/taobao/hot', function (req, res, next) {
   var options = {url: URL_QINGTAOKE+'/hot?v=1.0&app_key='+KEY_QINGTAOKE}
