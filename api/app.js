@@ -40,7 +40,7 @@ app.get('/baokuan', function (req, res, next) {
   request({url: URL_HAODANKU_BAOKUAN}, function(error, response, body) {
     if (!error && response.statusCode == 200) {
         res.setHeader('Content-Type', 'application/json')
-        var list = JSON.parse(body).item_info.map(obj => {
+        var list = JSON.parse(body).data.map(obj => {
             var goods = {}
             goods.goods_id = obj.itemid
             goods.goods_pic = obj.itempic+'_310x310.jpg'
