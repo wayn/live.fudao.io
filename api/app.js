@@ -17,6 +17,7 @@ const URL_TAOBAO_SEARCH = 'https://pub.alimama.com/items/search.json?perPageSize
 const URL_HAODANKU_DETAIL = 'http://v2.api.haodanku.com/item_detail/apikey/livefudaoio/itemid/'
 const URL_HAODANKU_SEARCH = 'http://v2.api.haodanku.com/supersearch/apikey/livefudaoio/keyword/'
 const URL_HAODANKU_DESERVE = 'http://v2.api.haodanku.com/get_deserve_item/apikey/livefudaoio'
+const URL_HAODANKU_BAOKUAN = 'http://v2.api.haodanku.com/sales_list/apikey/livefudaoio/sale_type/1'
 
 /***
 TEXT: 【三只松鼠_氧气吐司面包800g/整箱】夹心吐司口袋面包早餐多口味
@@ -36,14 +37,26 @@ t:timestamp
 
 // 爆款
 app.get('/baokuan', function (req, res, next) {
-  var options = {url: URL_QINGTAOKE+'/baokuan?v=1.0&app_key='+KEY_QINGTAOKE}
-
-  request(options, function(error, response, body) {
+  request({url: URL_HAODANKU_BAOKUAN}, function(error, response, body) {
     if (!error && response.statusCode == 200) {
-      res.setHeader('Content-Type', 'application/json');
-      res.send(body)
+        res.setHeader('Content-Type', 'application/json')
+        var list = JSON.parse(body).item_info.map(obj => {
+            var goods = {}
+            goods.goods_id = obj.itemid
+            goods.goods_pic = obj.itempic+'_310x310.jpg'
+            goods.goods_title = obj.itemtitle.replace(/<\/?[^>]+(>|$)/g, "")
+            goods.goods_short_title = obj.itemshorttitle
+            goods.goods_price = obj.itemprice
+            goods.coupon_price = obj.couponmoney
+            goods.goods_introduce = obj.guide_article
+            goods.coupon_start_time = new Date(obj.couponstarttime*1000).toISOString()
+            goods.coupon_end_time = new Date(obj.couponendtime*1000).toISOString()
+            goods.goods_sales = obj.itemsale
+            return goods
+        })
+        res.send({'er_code': 10000, 'er_msg': '', 'data': list})
     }
-  })
+})
 });
 
 app.get('/taobao/deserve', function (req, res, next) {
