@@ -17,27 +17,27 @@
         }],
     "iconList": [{
       "id": "10",
-      "imgUrl": "https://live.fudao.io/image/1.png",
+      "imgUrl": "https://live.fudao.io/api/image/1.png",
       "desc": "女装"
     }, {
       "id": "12",
-      "imgUrl": "https://live.fudao.io/image/2.png",
+      "imgUrl": "https://live.fudao.io/api/image/2.png",
       "desc": "男装"
     }, {
       "id": "5",
-      "imgUrl": "https://live.fudao.io/image/3.png",
+      "imgUrl": "https://live.fudao.io/api/image/3.png",
       "desc": "鞋包"
     }, {
       "id": "11",
-      "imgUrl": "https://live.fudao.io/image/4.png",
+      "imgUrl": "https://live.fudao.io/api/image/4.png",
       "desc": "内衣"
     }, {
       "id": "2",
-      "imgUrl": "https://live.fudao.io/image/5.png",
+      "imgUrl": "https://live.fudao.io/api/image/5.png",
       "desc": "母婴"
     }, {
       "id": "3",
-      "imgUrl": "https://live.fudao.io/image/6.png",
+      "imgUrl": "https://live.fudao.io/api/image/6.png",
       "desc": "美妆"
     }, {
       "id": "5",
@@ -45,15 +45,15 @@
       "desc": "配饰"
     }, {
       "id": "6",
-      "imgUrl": "https://live.fudao.io/image/8.png",
+      "imgUrl": "https://live.fudao.io/api/image/8.png",
       "desc": "美食"
     }, {
       "id": "7",
-      "imgUrl": "https://live.fudao.io/image/9.png",
+      "imgUrl": "https://live.fudao.io/api/image/9.png",
       "desc": "车品"
     }, {
       "id": "8",
-      "imgUrl": "https://live.fudao.io/image/10.png",
+      "imgUrl": "https://live.fudao.io/api/image/10.png",
       "desc": "家电"
     }]
 }
