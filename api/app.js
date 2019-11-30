@@ -7,6 +7,8 @@ var multer = require('multer'); // v1.0.5
 var upload = multer();
 const app = express()
 
+app.use(express.static('public'));
+
 // Global consts
 const KEY_QINGTAOKE = '4h1EZTru'
 const URL_QINGTAOKE = 'http://openapi.qingtaoke.com'
