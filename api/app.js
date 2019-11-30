@@ -45,7 +45,8 @@ app.get('/baokuan', function (req, res, next) {
         var list = JSON.parse(body).data.map(obj => {
             var goods = {}
             goods.goods_id = obj.itemid
-            goods.goods_pic = obj.itempic+'_310x310.jpg'
+            var images = obj.taobao_image.replace('http', 'https').split(',')
+            goods.goods_pic = images[0]+'_310x310.jpg'
             goods.goods_title = obj.itemtitle.replace(/<\/?[^>]+(>|$)/g, "")
             goods.goods_short_title = obj.itemshorttitle
             goods.goods_price = obj.itemprice
@@ -68,7 +69,8 @@ app.get('/taobao/deserve', function (req, res, next) {
             var list = JSON.parse(body).item_info.map(obj => {
                 var goods = {}
                 goods.goods_id = obj.itemid
-                goods.goods_pic = obj.itempic+'_310x310.jpg'
+                var images = obj.taobao_image.replace('http', 'https').split(',')
+                goods.goods_pic = images[0]+'_310x310.jpg'
                 goods.goods_title = obj.itemtitle.replace(/<\/?[^>]+(>|$)/g, "")
                 goods.goods_short_title = obj.itemshorttitle
                 goods.goods_price = obj.itemprice
