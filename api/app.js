@@ -203,6 +203,7 @@ app.get('/taobao/detail', function (req, res, next) {
           newBody.data.item.goods_introduce = body.data.guide_article
           newBody.data.item.goods_sales = body.data.itemsale
           newBody.data.item.swiperImgs = [body.data.itempic]
+          newBody.data.item.goods_title = body.data.itemshorttitle
         }
         res.send(JSON.stringify(newBody))
       }
