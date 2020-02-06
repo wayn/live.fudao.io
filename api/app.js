@@ -195,17 +195,14 @@ app.get('/taobao/detail', function (req, res, next) {
       if (!error && response.statusCode == 200 && JSON.parse(body).code != 0) {
         var body = JSON.parse(body)
         if (typeof body.data != "undefined") {
-          console.log("yyyy");
-          var newBody = {'data': {}};
-          newBody.data.goods_price = body.data.itemprice
-          newBody.data.coupon_price = body.data.couponmoney
-          newBody.data.coupon_start_time = new Date(body.data.couponstarttime*1000).toISOString()
-          newBody.data.coupon_end_time = new Date(body.data.couponendtime*1000).toISOString()
-          newBody.data.goods_introduce = body.data.guide_article
-          newBody.data.goods_sales = body.data.itemsale
-          newBody.data.swiperImgs = [body.data.itempic]
-          console.log(newBody);
-          
+          var newBody = {'data': {'item': {}}}
+          newBody.data.item.goods_price = body.data.itemprice
+          newBody.data.item.coupon_price = body.data.couponmoney
+          newBody.data.item.coupon_start_time = new Date(body.data.couponstarttime*1000).toISOString()
+          newBody.data.item.coupon_end_time = new Date(body.data.couponendtime*1000).toISOString()
+          newBody.data.item.goods_introduce = body.data.guide_article
+          newBody.data.item.goods_sales = body.data.itemsale
+          newBody.data.item.swiperImgs = [body.data.itempic]
         }
         res.send(JSON.stringify(newBody))
       }
