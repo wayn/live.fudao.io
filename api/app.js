@@ -189,50 +189,74 @@ app.get('/taobao/hot', function (req, res, next) {
 });
 
 app.get('/taobao/detail', function (req, res, next) {
-  var p1 = new Promise(function(resolve, reject) {
-    request({url: URL_TAOBAO_DETAIL+req.query['goods_id']+'%22%7D'}, function(error, response, body) {
-      if (!error && response.statusCode == 200) {
-        resolve(body)
+
+    request({url: URL_HAODANKU_DETAIL+req.query['goods_id']}, function(error, response, body) {
+      // console.log(body);
+      if (!error && response.statusCode == 200 && JSON.parse(body).code != 0) {
+        var body = JSON.parse(body)
+        if (typeof body.data != "undefined") {
+          console.log("yyyy");
+          var newBody = {'data': {}};
+          newBody.data.goods_price = body.data.itemprice
+          newBody.data.coupon_price = body.data.couponmoney
+          newBody.data.coupon_start_time = new Date(body.data.couponstarttime*1000).toISOString()
+          newBody.data.coupon_end_time = new Date(body.data.couponendtime*1000).toISOString()
+          newBody.data.goods_introduce = body.data.guide_article
+          newBody.data.goods_sales = body.data.itemsale
+          newBody.data.swiperImgs = [body.data.itempic]
+          console.log(newBody);
+          
+        }
+        res.send(JSON.stringify(newBody))
       }
     })
-  });
-
-  var p2 = new Promise(function(resolve, reject) {
-
-    if (req.query['reload'] == '1') {
-      request({url: URL_HAODANKU_DETAIL+req.query['goods_id']}, function(error, response, body) {
-        console.log(body);
-        if (!error && response.statusCode == 200 && JSON.parse(body).code != 0) {
-          p2 = resolve(body)
-        }
-        else {
-          resolve('[]')
-        }
-      })
-    }
-    else {
-      resolve('[]')
-    }
-  });
-
-  Promise.all([p1, p2]).then(values => {
-    res.setHeader('Content-Type', 'application/json');
-    var body1 = JSON.parse(values[0])
-    console.log('=================');
-    console.log(values[1]);
-    var body2 = JSON.parse(values[1])
-    if (typeof body2.data != "undefined") {
-      body1.data.item.goods_price = body2.data.itemprice
-      body1.data.item.coupon_price = body2.data.couponmoney
-      body1.data.item.coupon_start_time = new Date(body2.data.couponstarttime*1000).toISOString()
-      body1.data.item.coupon_end_time = new Date(body2.data.couponendtime*1000).toISOString()
-      body1.data.item.goods_introduce = body2.data.guide_article
-      body1.data.item.goods_sales = body2.data.itemsale
-    }
-
-    res.send(JSON.stringify(body1))
-  })
 });
+
+// app.get('/taobao/detail', function (req, res, next) {
+//   var p1 = new Promise(function(resolve, reject) {
+//     request({url: URL_TAOBAO_DETAIL+req.query['goods_id']+'%22%7D'}, function(error, response, body) {
+//       if (!error && response.statusCode == 200) {
+//         resolve(body)
+//       }
+//     })
+//   });
+
+//   var p2 = new Promise(function(resolve, reject) {
+
+//     if (req.query['reload'] == '1') {
+//       request({url: URL_HAODANKU_DETAIL+req.query['goods_id']}, function(error, response, body) {
+//         console.log(body);
+//         if (!error && response.statusCode == 200 && JSON.parse(body).code != 0) {
+//           p2 = resolve(body)
+//         }
+//         else {
+//           resolve('[]')
+//         }
+//       })
+//     }
+//     else {
+//       resolve('[]')
+//     }
+//   });
+
+//   Promise.all([p1, p2]).then(values => {
+//     res.setHeader('Content-Type', 'application/json');
+//     var body1 = JSON.parse(values[0])
+//     console.log('=================');
+//     console.log(values[1]);
+//     var body2 = JSON.parse(values[1])
+//     if (typeof body2.data != "undefined") {
+//       body1.data.item.goods_price = body2.data.itemprice
+//       body1.data.item.coupon_price = body2.data.couponmoney
+//       body1.data.item.coupon_start_time = new Date(body2.data.couponstarttime*1000).toISOString()
+//       body1.data.item.coupon_end_time = new Date(body2.data.couponendtime*1000).toISOString()
+//       body1.data.item.goods_introduce = body2.data.guide_article
+//       body1.data.item.goods_sales = body2.data.itemsale
+//     }
+
+//     res.send(JSON.stringify(body1))
+//   })
+// });
 
 app.get('/taobao/desc', function (req, res, next) {
   var options = {url: URL_TAOBAO_DESC+req.query['goods_id']}
