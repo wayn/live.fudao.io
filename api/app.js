@@ -291,7 +291,7 @@ app.get('/taobao/coupon', function (req, res, next) {
   let formData = {'apikey':'livefudaoio', 
                   'pid':'mm_33712550_230450350_63092300043',
                   'tb_name':'wayn_liu',
-                  'get_taoword':'',
+                  'get_taoword':'1',
                   'title':req.query['title'],
                   'itemid':req.query['goods_id']}
   request.post({url: URL_HAODANKU_RATE, form: formData}, function(err,httpResponse,body) {
