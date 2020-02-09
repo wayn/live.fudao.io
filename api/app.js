@@ -20,6 +20,7 @@ const URL_HAODANKU_DETAIL = 'http://v2.api.haodanku.com/item_detail/apikey/livef
 const URL_HAODANKU_SEARCH = 'http://v2.api.haodanku.com/supersearch/apikey/livefudaoio/keyword/'
 const URL_HAODANKU_DESERVE = 'http://v2.api.haodanku.com/get_deserve_item/apikey/livefudaoio'
 const URL_HAODANKU_BAOKUAN = 'http://v2.api.haodanku.com/sales_list/apikey/livefudaoio/sale_type/1'
+const URL_HAODANKU_RATE = 'http://v2.api.haodanku.com/ratesurl'
 
 /***
 TEXT: 【三只松鼠_氧气吐司面包800g/整箱】夹心吐司口袋面包早餐多口味
@@ -272,17 +273,30 @@ app.get('/taobao/desc', function (req, res, next) {
   })
 });
 
+// app.get('/taobao/coupon', function (req, res, next) {
+//   let timestamp = + new Date()
+//   let filePath = path.join(__dirname, 'cookie')
+//   var cookies = fs.readFileSync(filePath).toString()
+//   var options = {url: URL_TAOBAO_COUPON + req.query['goods_id'] + '&t=' + timestamp, headers:{Cookie:cookies}}
+//   request(options, function(error, response, body) {
+//     console.log(response.headers['set-cookie'])
+//     if (!error && response.statusCode == 200) {
+//       res.setHeader('Content-Type', 'application/json');
+//       res.send(body)
+//     }
+//   })
+// });
+
 app.get('/taobao/coupon', function (req, res, next) {
-  let timestamp = + new Date()
-  let filePath = path.join(__dirname, 'cookie')
-  var cookies = fs.readFileSync(filePath).toString()
-  var options = {url: URL_TAOBAO_COUPON + req.query['goods_id'] + '&t=' + timestamp, headers:{Cookie:cookies}}
-  request(options, function(error, response, body) {
-    console.log(response.headers['set-cookie'])
-    if (!error && response.statusCode == 200) {
-      res.setHeader('Content-Type', 'application/json');
-      res.send(body)
-    }
+  let formData = {'apikey':'livefudaoio', 
+                  'pid':'mm_33712550_230450350_63092300043',
+                  'tb_name':'wayn_liu',
+                  'get_taoword':'',
+                  'title':req.query['title'],
+                  'itemid':req.query['goods_id']}
+  request.post({url: URL_HAODANKU_RATE, form: formData}, function(err,httpResponse,body) {
+    res.setHeader('Content-Type', 'application/json')
+    res.send(body)
   })
 });
 
