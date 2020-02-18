@@ -20,6 +20,7 @@ const URL_HAODANKU_DETAIL = 'http://v2.api.haodanku.com/item_detail/apikey/livef
 const URL_HAODANKU_SEARCH = 'http://v2.api.haodanku.com/supersearch/apikey/livefudaoio/keyword/'
 const URL_HAODANKU_DESERVE = 'http://v2.api.haodanku.com/get_deserve_item/apikey/livefudaoio'
 const URL_HAODANKU_BAOKUAN = 'http://v2.api.haodanku.com/sales_list/apikey/livefudaoio/sale_type/1'
+const URL_HAODANKU_SIMILAR = 'http://v2.api.haodanku.com/get_similar_info/apikey/livefudaoio/itemid/'
 const URL_HAODANKU_RATE = 'http://v2.api.haodanku.com/ratesurl'
 
 /***
@@ -60,7 +61,7 @@ app.get('/baokuan', function (req, res, next) {
         })
         res.send({'er_code': 10000, 'er_msg': '', 'data': list})
     }
-})
+  })
 });
 
 app.get('/taobao/deserve', function (req, res, next) {
@@ -211,52 +212,6 @@ app.get('/taobao/detail', function (req, res, next) {
     })
 });
 
-// app.get('/taobao/detail', function (req, res, next) {
-//   var p1 = new Promise(function(resolve, reject) {
-//     request({url: URL_TAOBAO_DETAIL+req.query['goods_id']+'%22%7D'}, function(error, response, body) {
-//       if (!error && response.statusCode == 200) {
-//         resolve(body)
-//       }
-//     })
-//   });
-
-//   var p2 = new Promise(function(resolve, reject) {
-
-//     if (req.query['reload'] == '1') {
-//       request({url: URL_HAODANKU_DETAIL+req.query['goods_id']}, function(error, response, body) {
-//         console.log(body);
-//         if (!error && response.statusCode == 200 && JSON.parse(body).code != 0) {
-//           p2 = resolve(body)
-//         }
-//         else {
-//           resolve('[]')
-//         }
-//       })
-//     }
-//     else {
-//       resolve('[]')
-//     }
-//   });
-
-//   Promise.all([p1, p2]).then(values => {
-//     res.setHeader('Content-Type', 'application/json');
-//     var body1 = JSON.parse(values[0])
-//     console.log('=================');
-//     console.log(values[1]);
-//     var body2 = JSON.parse(values[1])
-//     if (typeof body2.data != "undefined") {
-//       body1.data.item.goods_price = body2.data.itemprice
-//       body1.data.item.coupon_price = body2.data.couponmoney
-//       body1.data.item.coupon_start_time = new Date(body2.data.couponstarttime*1000).toISOString()
-//       body1.data.item.coupon_end_time = new Date(body2.data.couponendtime*1000).toISOString()
-//       body1.data.item.goods_introduce = body2.data.guide_article
-//       body1.data.item.goods_sales = body2.data.itemsale
-//     }
-
-//     res.send(JSON.stringify(body1))
-//   })
-// });
-
 app.get('/taobao/desc', function (req, res, next) {
   var options = {url: URL_TAOBAO_DESC+req.query['goods_id']}
   request(options, function(error, response, body) {
@@ -273,19 +228,36 @@ app.get('/taobao/desc', function (req, res, next) {
   })
 });
 
-// app.get('/taobao/coupon', function (req, res, next) {
-//   let timestamp = + new Date()
-//   let filePath = path.join(__dirname, 'cookie')
-//   var cookies = fs.readFileSync(filePath).toString()
-//   var options = {url: URL_TAOBAO_COUPON + req.query['goods_id'] + '&t=' + timestamp, headers:{Cookie:cookies}}
-//   request(options, function(error, response, body) {
-//     console.log(response.headers['set-cookie'])
-//     if (!error && response.statusCode == 200) {
-//       res.setHeader('Content-Type', 'application/json');
-//       res.send(body)
-//     }
-//   })
-// });
+app.get('/taobao/similar', function (req, res, next) {
+  request({url: URL_HAODANKU_SIMILAR+req.query['goods_id']}, function(error, response, body) {
+    if (!error && response.statusCode == 200) {
+        res.setHeader('Content-Type', 'application/json')
+        var list = JSON.parse(body).data.map(obj => {
+            var goods = {}
+            goods.goods_id = obj.itemid
+            var images = []
+            if (typeof obj.taobao_image === 'undefined' || obj.taobao_image == null) {
+              images = [obj.itempic]
+            }
+            else {
+              images = obj.taobao_image.replace('http', 'https').split(',')
+            }
+            
+            goods.goods_pic = images[0]+'_310x310.jpg'
+            goods.goods_title = obj.itemtitle.replace(/<\/?[^>]+(>|$)/g, "")
+            goods.goods_short_title = obj.itemshorttitle
+            goods.goods_price = obj.itemprice
+            goods.coupon_price = obj.couponmoney
+            goods.goods_introduce = obj.guide_article
+            goods.coupon_start_time = new Date(obj.couponstarttime*1000).toISOString()
+            goods.coupon_end_time = new Date(obj.couponendtime*1000).toISOString()
+            goods.goods_sales = obj.itemsale
+            return goods
+        })
+        res.send({'er_code': 10000, 'er_msg': '', 'data': list})
+    }
+  })
+});
 
 app.get('/taobao/coupon', function (req, res, next) {
   let formData = {'apikey':'livefudaoio', 
